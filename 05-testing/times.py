@@ -16,6 +16,11 @@ def overlap_time(obs1, obs2):
              if tr0 <= tra <= tr1 or tr0 <= trb <= tr1:
                 low = max(tr0, tra)
                 high = min(tr1, trb)
+                if low == high:
+                    # If low and high are equal is that edges are touching
+                    # and we don't want to return such element, continue to
+                    # next element.
+                    continue   
                 ot.append((low, high))
     return ot
 
