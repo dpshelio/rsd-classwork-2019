@@ -1,5 +1,7 @@
 import datetime
 
+import requests
+
 def time_range(t0, t1, n=1, g=0):
     if t1 < t0:
         raise ValueError("Stopping date should happen after than starting date")
@@ -26,9 +28,26 @@ def overlap_time(obs1, obs2):
                 ot.append((low, high))
     return ot
 
+def iss_passes(lat, lon, n=5):
+    """
+    Returns a time_range like output for the passes of the International Space Station
+    at a given location and for a number of days from today.
+    """
+    iss_request = requests.get("http://api.open-notify.org/iss-pass.json",
+                               params={
+                                   "lat": lat,
+                                   "lon": lon,
+                                   "n": n})
+
+    if iss_request.status_code != 200:
+        # the request have failed by any reason
+        return []
+    response = iss_request.json()['response']
+    return [(datetime.datetime.fromtimestamp(x['risetime']).strftime("%Y-%m-%d %H:%M:%S"),
+             (datetime.datetime.fromtimestamp(x['risetime'] + x['duration'])).strftime("%Y-%m-%d %H:%M:%S"))
+            for x in response]
+
 
 if __name__ == "__main__":
-    large = time_range("2010-01-12 10:00:00", "2010-01-12 12:00:00")
-    short = time_range("2010-01-12 10:30:00", "2010-01-12 10:45:00", 2, 60)
-    print(overlap_time(large, short))
+    print(iss_passes(51.5074, -0.1278)) # ISS passes over London
 
