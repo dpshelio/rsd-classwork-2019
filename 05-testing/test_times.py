@@ -29,3 +29,9 @@ def test_no_overlap():
     short = times.time_range("2019-01-02 00:30:00", "2019-01-02 23:55:00")
     result = times.overlap_time(large, short)
     assert len(result) == 0
+
+def test_touching_edges():
+    large = times.time_range("2019-10-31 00:00:00", "2019-10-31 00:50:00", 3, 600)
+    short = times.time_range("2019-10-31 00:10:00", "2019-10-31 01:00:00", 3, 600)
+    result = times.overlap_time(large, short)
+    assert result == [] # I expect to get an empty list.
