@@ -24,6 +24,8 @@ def test_20_min():
     datetime.datetime.strptime(t0, "%Y-%m-%d %H:%M:%S")).total_seconds() == 20 * 60
     for t0, t1 in result])
 
-# What happens when...
-
-# ...
+def test_no_overlap():
+    large = times.time_range("2019-01-01 00:00:00", "2019-01-01 23:50:00")
+    short = times.time_range("2019-01-02 00:30:00", "2019-01-02 23:55:00")
+    result = times.overlap_time(large, short)
+    assert len(result) == 0
