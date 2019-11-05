@@ -37,3 +37,7 @@ def test_20_min():
     assert all([(datetime.datetime.strptime(t1, "%Y-%m-%d %H:%M:%S") - 
     datetime.datetime.strptime(t0, "%Y-%m-%d %H:%M:%S")).total_seconds() == 20 * 60
     for t0, t1 in result])
+
+def test_range_backwards():
+    with pytest.raises(ValueError, match=r"Stopping date should happen after than starting date"):
+        times.time_range("2019-10-31 00:00:00", "2019-10-30 00:50:00", 3, 600)

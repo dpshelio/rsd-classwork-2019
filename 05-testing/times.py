@@ -1,6 +1,8 @@
 import datetime
 
 def time_range(t0, t1, n=1, g=0):
+    if t1 < t0:
+        raise ValueError("Stopping date should happen after than starting date")
     t0_s = datetime.datetime.strptime(t0, "%Y-%m-%d %H:%M:%S")
     t1_s = datetime.datetime.strptime(t1, "%Y-%m-%d %H:%M:%S")
     d = (t1_s - t0_s).total_seconds() / n + g * (1/n - 1)
